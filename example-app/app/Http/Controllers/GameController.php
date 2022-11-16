@@ -7,8 +7,9 @@ use App\Http\Resources\GameResource;
 use App\Http\Resources\GameShortResource;
 
 use App\Models\Game;
-
+use App\Models\Media;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class GameController extends Controller
@@ -64,16 +65,29 @@ class GameController extends Controller
             "title" => $request->title,
             "description" => $request->description,
             "price" => $request->price,
-            "main_photo" => $request->main_photo,
             "publisher_id" => 1,
             "slug" => Str::slug($request->title, '-')
         ]);
 
-        $game->save();
+        $path = Storage::disk("public")
+            ->put("/games", $request->file("main_photo"));
 
+        $main_photo = Media::create([
+            "game_id" => $game->id,
+            "media_type" => Media::TYPE_GAME_MAIN_PHOTO,
+            "file_path" => $path,
+            "url" => asset(Storage::url($path)),
+        ]);
+
+        $game->main_photo = $main_photo["url"];
+
+        $game->save();
+        $main_photo->save();
+
+        
         return response([
             "msg" => "game created!",
-            "game" => $game
+            "game" => new GameShortResource($game)
         ]);
     }
 
@@ -88,22 +102,43 @@ class GameController extends Controller
     public function update(Request $request, Game $game) {
 
         $fields = $request->only([
-            "title", 
-            "description", 
-            "price" 
+            "title", "description", 
+            "price", "main_photo"
         ]);
 
         $game->update($fields,[
-                "title" => $request->title ?: $game->title,
-                "description" => $request->description ?: $game->description,
-                "price" => $request->price ?: $game->price
+            "title" => $request->title ?: $game->title,
+            "description" => $request->description ?: $game->description,
+            "price" => $request->price ?: $game->price
+        ]);
+
+        if($request->hasFile("main_photo")) {
+
+            $main_photo = $game->media()
+                ->where("media_type", Media::TYPE_GAME_MAIN_PHOTO)
+                ->first();
+
+            Storage::disk("public")
+                ->delete($main_photo->file_path);
+
+            $path = Storage::disk("public")
+                ->put("/games", $request->file("main_photo"));
+
+            $main_photo->update([
+                "file_path" => $path,
+                "url" => asset(Storage::url($path))
             ]);
+
+            $main_photo->save();
+            $game->main_photo = $main_photo->url;
+        }
         
+
         $game->save();
 
         return response([
-            "msg" => "game updated!!",
-            "game" => $game
+            "msg" => "game updated!",
+            "game" => new GameShortResource($game)
         ]);
     }
 
@@ -112,7 +147,8 @@ class GameController extends Controller
     */
 
     public function destroy(Game $game) {
-        
+
+        $game->media()->delete();
         $game->delete();
 
         return response([

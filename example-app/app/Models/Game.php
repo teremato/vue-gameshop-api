@@ -32,4 +32,8 @@ class Game extends Model
     public function publisher() {
         return $this->belongsTo(Publisher::class);
     }
+
+    public function media() {
+        return $this->hasMany(Media::class, "game_id");
+    }
 }

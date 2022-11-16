@@ -26,8 +26,8 @@ class GameRequest extends FormRequest
         return [
             "title" => ["required", "max:100"],
             "description" => ["required", "max:250"],
-            // "game.main_photo" => ["required", "file", "mimetypes:jpg,png"],
-            "price" => ["required", "numeric"]
+            "price" => ["required", "numeric"],
+            "main_photo" => ["required", "file", "mimes:jpg,png"],
         ];
     }
 }
