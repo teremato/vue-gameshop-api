@@ -17,8 +17,8 @@ return new class extends Migration
 
             $table->id();
 
-            $table->string('name')->nullable();
-            $table->string('username');
+            $table->string('name');
+            $table->string('username')->nullable();
 
             $table->text('status')->nullable();
             $table->string('role')->default('user');

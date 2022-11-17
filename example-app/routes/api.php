@@ -3,9 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
-use Illuminate\Http\File;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,17 +28,44 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 /**
+ * @api auth
+ */
+
+Route::group(["prefix" => "auth"], function () {
+
+    Route::post("/registration", [App\Http\Controllers\AuthController::class, "registration"]);
+    Route::post("/login", [AuthController::class, "login"]);
+
+    /** @param "Barear asdsad2123..." */
+    Route::group(['middleware' =>'auth:sanctum'], function () {
+    
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
+});
+
+/**
  * @api games
  */
 
 Route::group(["prefix" => "games"], function () {
 
+    /** @var game | @method GET */
     Route::get("/", [GameController::class, 'games']);
     Route::get("/{game:slug}", [GameController::class, 'gameItem']);
 
-    Route::post("/create", [GameController::class, "store"]);
-    Route::post("/update/{game:id}", [GameController::class, "update"]);
-    Route::delete("/delete/{game:id}", [GameController::class, "destroy"]);
+    /** @param "Barear asdsad2123..." */
+    Route::group(['middleware' =>'auth:sanctum'], function () {
+
+        /** @var game | @method CREATE | UPDATE | DELETE */
+        Route::post("/create", [GameController::class, "store"]);
+        Route::post("/update/{game:id}", [GameController::class, "update"]);
+        Route::delete("/delete/{game:id}", [GameController::class, "destroy"]);
+    
+        /** @var game_media | @method CREATE | UPDATE | DELETE */
+        Route::post("/media/create/{game:id}", [MediaController::class, "addGameMedia"]);
+        Route::delete("media/delete/{media:id}", [MediaController::class, "deleteGameMedia"]);
+    });
+
 });
 
 /**
@@ -46,4 +74,19 @@ Route::group(["prefix" => "games"], function () {
 
 Route::group(["prefix" => "user"], function () {
 
+    /** 
+     * @var user_media | @method CREATE | DELETE
+     * @param "Barear asdsad2123..."
+     */
+
+    Route::group(['middleware' =>'auth:sanctum'], function () {
+        
+        /** @var user | @method POST */
+        Route::post("/avatar", [UserController::class, "changeUserAvatar"]);
+        Route::post("/status", [UserController::class, "changeUserStatus"]);
+        
+        /** @var user_media | @method POST | DELETE */
+        Route::post("/media/create/{user:id}", [MediaController::class, "addUserMedia"]);
+        Route::delete("/media/delete/{media:id}", [MediaController::class, "deleteUserMedia"]);
+    });
 });

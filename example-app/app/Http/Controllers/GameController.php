@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
 class GameController extends Controller
 {
     /**
-     * @api [/games/] Получить игры 
+     * @api POST [/games/] Получить игры 
      * @param sort [string] Тип сортировки
      * @param page [number] Колчество страниц
      * @param per_page [number] Количество игр за страницу
@@ -45,7 +45,7 @@ class GameController extends Controller
 
     /**
     * @api [/games/create] Создать игру
-    * @param => @var game =>
+    * @param App\Models\Game $game
     */
     /*
     {
@@ -61,6 +61,7 @@ class GameController extends Controller
 
     public function store(GameRequest $request) {
 
+        /* Создаем игру */
         $game = Game::create([
             "title" => $request->title,
             "description" => $request->description,
@@ -69,9 +70,11 @@ class GameController extends Controller
             "slug" => Str::slug($request->title, '-')
         ]);
 
+        /* Добавляем фото и получаем его путь */
         $path = Storage::disk("public")
             ->put("/games", $request->file("main_photo"));
 
+        /* Создаем запись в бд о фото */
         $main_photo = Media::create([
             "game_id" => $game->id,
             "media_type" => Media::TYPE_GAME_MAIN_PHOTO,
@@ -79,12 +82,13 @@ class GameController extends Controller
             "url" => asset(Storage::url($path)),
         ]);
 
+        /* Добавляем к игре поле с ссылкой на фото */
         $game->main_photo = $main_photo["url"];
 
+        /* Сохраняем */
         $game->save();
         $main_photo->save();
 
-        
         return response([
             "msg" => "game created!",
             "game" => new GameShortResource($game)
@@ -101,39 +105,49 @@ class GameController extends Controller
 
     public function update(Request $request, Game $game) {
 
+        /* Определяем поля для реквеста */
         $fields = $request->only([
             "title", "description", 
             "price", "main_photo"
         ]);
 
+        /* Переписываем данные игры */
         $game->update($fields,[
             "title" => $request->title ?: $game->title,
             "description" => $request->description ?: $game->description,
             "price" => $request->price ?: $game->price
         ]);
 
+        /* Проверяем на наличие фото */
         if($request->hasFile("main_photo")) {
 
+            /* Получаем старое фото из бд */
             $main_photo = $game->media()
                 ->where("media_type", Media::TYPE_GAME_MAIN_PHOTO)
                 ->first();
 
+            /* Удаляем старое фото */
             Storage::disk("public")
                 ->delete($main_photo->file_path);
 
+            /* Добавляем фото и получаем его путь */
             $path = Storage::disk("public")
                 ->put("/games", $request->file("main_photo"));
 
+            /* Обновляем запись в бд */
             $main_photo->update([
                 "file_path" => $path,
                 "url" => asset(Storage::url($path))
             ]);
 
+            /* Сохраняем фото */
             $main_photo->save();
+
+            /* Добавляем поле с ссылкой на фото */
             $game->main_photo = $main_photo->url;
         }
         
-
+        /* Сохраняем игру в бд */
         $game->save();
 
         return response([
@@ -148,7 +162,10 @@ class GameController extends Controller
 
     public function destroy(Game $game) {
 
+        /* Удаляем медиа игры */
         $game->media()->delete();
+
+        /* Удаляем игру */
         $game->delete();
 
         return response([
