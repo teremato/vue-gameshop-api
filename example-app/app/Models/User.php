@@ -46,5 +46,9 @@ class User extends Authenticatable
 
     public function media() {
         return $this->hasMany(Media::class, "user_id");
-    } 
+    }
+
+    public function posts() {
+        return $this->hasMany(Post::class, "user_id");
+    }
 }

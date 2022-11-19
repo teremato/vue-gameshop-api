@@ -19,9 +19,12 @@ return new class extends Migration
 
             $table->string('name');
             $table->string('username')->nullable();
+            $table->string('role')->default('user');
 
             $table->text('status')->nullable();
-            $table->string('role')->default('user');
+            $table->string("country")->nullable();
+            $table->string("favorite_game")->nullable();
+
             $table->string('avatar')->nullable();
 
             $table->string('email')->unique();

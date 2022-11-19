@@ -4,11 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GamePhotosResource extends JsonResource
+class PhotoResource extends JsonResource
 {
-
-    public static $wrap = 'photos';
-
     /**
      * Transform the resource into an array.
      *
@@ -19,8 +16,7 @@ class GamePhotosResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "game_id" => $this->game_id,
-            "image" => $this->image
+            "image" => $this->url
         ];
     }
 }

@@ -86,11 +86,19 @@ class MediaController extends Controller
                 ->put("/users", $request->file("photo"));
 
             /* Создаем запись о файле в бд */
-            $user->media()->create([
-                "game_id" => $user->id,
+            $photo = Media::create([
+                "user_id" => $user->id,
                 "media_type" => Media::TYPE_USER_MEDIA,
                 "file_path" => $path,
                 "url" => asset(Storage::url($path)),
+            ]);
+
+            return response([
+                "msg" => "photo is added",
+                "photo" => [
+                    "id" => $photo["id"],
+                    "image" => $photo["url"]
+                ]
             ]);
         }
         else return response([ "msg" => "Not files" ]);

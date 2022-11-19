@@ -5,12 +5,13 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 use App\Http\Resources\GameSettingsResource;
-use App\Http\Resources\GamePhotosResource;
+use App\Http\Resources\PhotoResource;
+use App\Models\Media;
 
 class GameResource extends JsonResource
 {
 
-    public static $wrap = 'games';
+    public static $wrap = 'game';
 
     /**
      * Transform the resource into an array.
@@ -29,7 +30,9 @@ class GameResource extends JsonResource
             "slug" => $this->slug,
             "created_at" => $this->created_at,
 
-            "photos" => GamePhotosResource::collection($this->gamePhotos()->get()),
+            "photos" => PhotoResource::collection($this->media()
+                ->where("media_type", Media::TYPE_GAME_MEDIA)
+                ->take(6)->get()),
             "settings" => new GameSettingsResource($this->gameSettings()->first()),
             "publisher" => new PublisherShortResource($this->publisher()->first()),
         ];

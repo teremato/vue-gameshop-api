@@ -38,9 +38,7 @@ class GameController extends Controller
 
     public function gameItem(Game $game) {
 
-        return new GameResource(Game::findOrFail($game->id)
-            ->first()
-        );
+        return new GameResource($game);
     }
 
     /**
@@ -66,7 +64,7 @@ class GameController extends Controller
             "title" => $request->title,
             "description" => $request->description,
             "price" => $request->price,
-            "publisher_id" => 1,
+            "publisher_id" => $request->id,
             "slug" => Str::slug($request->title, '-')
         ]);
 

@@ -2,12 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Media;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
 
-    public static $wrap = 'users';
+    public static $wrap = 'user';
 
     /**
      * Transform the resource into an array.
@@ -19,11 +20,18 @@ class UserResource extends JsonResource
     {
         return [
             "id" => $this->id,
+            
             "name" => $this->name,
             "username" => $this->username,
             "status" => $this->status,
             "role" => $this->role,
             "avatar" => $this->avatar,
+            "status" => $this->status,
+            "country" => $this->country,
+            "favorite_game" => $this->favorite_game,
+
+            "media" => PhotoResource::collection($this->media()
+                ->take(4)->get())
         ];
     }
 }

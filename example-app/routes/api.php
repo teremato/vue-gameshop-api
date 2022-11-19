@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -19,9 +20,9 @@ use App\Http\Controllers\UserController;
 |
 */
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: *');
-header('Access-Control-Allow-Headers: *');
+// header('Access-Control-Allow-Origin: *');
+// header('Access-Control-Allow-Methods: *');
+// header('Access-Control-Allow-Headers: *');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -79,8 +80,13 @@ Route::group(["prefix" => "user"], function () {
      * @param "Barear asdsad2123..."
      */
 
+    Route::get("/{user:id}", [UserController::class, "getUserById"]);
+    
     Route::group(['middleware' =>'auth:sanctum'], function () {
         
+        /** @var user | @method GET */
+        Route::get("/", [UserController::class, "getUser"]);
+
         /** @var user | @method POST */
         Route::post("/avatar", [UserController::class, "changeUserAvatar"]);
         Route::post("/status", [UserController::class, "changeUserStatus"]);
@@ -88,5 +94,19 @@ Route::group(["prefix" => "user"], function () {
         /** @var user_media | @method POST | DELETE */
         Route::post("/media/create/{user:id}", [MediaController::class, "addUserMedia"]);
         Route::delete("/media/delete/{media:id}", [MediaController::class, "deleteUserMedia"]);
+    });
+});
+
+Route::group(["prefix" => "posts"], function() {
+
+    /** 
+     * @var user_media | @method CREATE | DELETE
+     * @param "Barear asdsad2123..."
+     */
+
+    Route::group(['middleware' =>'auth:sanctum'], function() {
+        
+        /** @var post | @method POST */
+        Route::post("/create", [PostController::class, "store"]);
     });
 });
