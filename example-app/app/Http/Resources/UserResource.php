@@ -31,7 +31,9 @@ class UserResource extends JsonResource
             "favorite_game" => $this->favorite_game,
 
             "media" => PhotoResource::collection($this->media()
-                ->take(4)->get())
+                ->take(4)->get()),
+            "posts" => PostResource::collection($this->posts()
+                ->get())
         ];
     }
 }

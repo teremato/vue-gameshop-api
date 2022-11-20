@@ -25,7 +25,11 @@ class AuthController extends Controller
             "password" => "required|string|min:6",
         ]);
 
-        $user = User::create($fields);
+        $user = User::create([
+            "name" => $fields["name"],
+            "email" => $fields["email"],
+            "password" => bcrypt($fields["password"])
+        ]);
 
         $token = $user->createToken('myAppToken')
             ->plainTextToken;

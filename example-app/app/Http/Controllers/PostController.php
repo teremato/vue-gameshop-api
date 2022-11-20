@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
+use App\Models\Media;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 class PostController extends Controller
 {
 
-    public function store(PostRequest $request) {
+    public function store(Request $request) {
 
         /* Получаем юзера */
         $user = $request->user();
@@ -22,16 +23,24 @@ class PostController extends Controller
             
             /* Добавляем фото на диск */
             $path = Storage::disk("public")
-                ->put("posts", $request->photo);
+                ->put("posts", $request->file("photo"));
 
-            $photo = asset(Storage::url($path));
+            /* Добавляем в бд */
+            $photo = $user->media()->create([
+                "user_id" => $user->id,
+                "media_type" => Media::TYPE_USER_MEDIA,
+                "file_path" => $path,
+                "url" => asset(Storage::url($path)),
+            ]);
+
+            $photo->save();
         }
 
         /* Добавляем пост в бд */
         $post = Post::create([
             "user_id" => $user->id,
             "text" => $request->text,
-            "photo" => $photo,
+            "photo_id" => $photo->id,
             "game_title" => $request->game_title ?: null
         ]);
 

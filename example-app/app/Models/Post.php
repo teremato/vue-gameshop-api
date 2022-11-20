@@ -11,7 +11,7 @@ class Post extends Model
 
     protected $fillable = [
         "user_id", "publisher_id",
-        "text", "photo"
+        "text", "photo_id"
     ];
 
     public function user() {
@@ -23,6 +23,6 @@ class Post extends Model
     }
 
     public function media() {
-        return $this->hasMany(Media::class, "id");
+        return $this->belongsTo(Media::class, "photo_id");
     }
 }
