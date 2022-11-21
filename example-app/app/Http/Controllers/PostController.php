@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Media;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ class PostController extends Controller
 
         return response([
             "msg" => "Post created!",
-            "post" => $post
+            "post" => new PostResource($post)
         ]);
     }
 

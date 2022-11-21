@@ -33,7 +33,7 @@ class UserResource extends JsonResource
             "media" => PhotoResource::collection($this->media()
                 ->take(4)->get()),
             "posts" => PostResource::collection($this->posts()
-                ->get())
+                ->latest()->get())
         ];
     }
 }
