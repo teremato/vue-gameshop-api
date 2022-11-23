@@ -106,7 +106,8 @@ Route::group(["prefix" => "posts"], function() {
 
     Route::group(['middleware' =>'auth:sanctum'], function() {
         
-        /** @var post | @method POST */
+        /** @var post | @method POST | GET */
+        Route::get("/user", [PostController::class, "getUserPost"]);
         Route::post("/create", [PostController::class, "store"]);
     });
 });

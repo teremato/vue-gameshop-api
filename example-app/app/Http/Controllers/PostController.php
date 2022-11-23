@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Storage;
 class PostController extends Controller
 {
 
+    public function getUserPost(Request $request) {
+
+        return PostResource::collection($request->user()
+            ->posts()
+            ->get());
+    }
+
     public function store(Request $request) {
 
         /* Получаем юзера */

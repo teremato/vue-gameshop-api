@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Media;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostResource extends JsonResource
+class UserShortResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +16,9 @@ class PostResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "user_id" => $this->user_id,
-            "user" => new UserShortResource($this->user("user_id", $this->user_id)->first()),
-            "text" => $this->text,
-            "photo" => new PhotoResource($this->media("photo_id", $this->photo_id)->first()),
-            "created_at" => $this->created_at
+            "name" => $this->name,
+            "avatar" => $this->avatar,
+
         ];
     }
 }
