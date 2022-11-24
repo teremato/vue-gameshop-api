@@ -52,8 +52,7 @@ class User extends Authenticatable
         return $this->hasMany(Post::class, "user_id");
     }
 
-    public function getUserPost() {
-        return $this->hasMany(Post::class, "user_id")
-            ->orderBy("created_at");
+    public function friends() {
+        return $this->hasMany(Friend::class, "friend_id");
     }
 }

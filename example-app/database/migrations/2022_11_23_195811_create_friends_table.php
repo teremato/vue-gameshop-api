@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger("user_id");
             $table->unsignedInteger("friend_id");
+            $table->boolean("accept")->default(false);
             $table->timestamps();
 
             $table->foreign("user_id")

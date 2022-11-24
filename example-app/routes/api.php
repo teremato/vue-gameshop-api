@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FriendController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PostController;
@@ -75,11 +76,6 @@ Route::group(["prefix" => "games"], function () {
 
 Route::group(["prefix" => "user"], function () {
 
-    /** 
-     * @var user_media | @method CREATE | DELETE
-     * @param "Barear asdsad2123..."
-     */
-
     Route::get("/{user:id}", [UserController::class, "getUserById"]);
     
     Route::group(['middleware' =>'auth:sanctum'], function () {
@@ -97,12 +93,34 @@ Route::group(["prefix" => "user"], function () {
     });
 });
 
-Route::group(["prefix" => "posts"], function() {
+/**
+ * @api friend
+ */
 
-    /** 
-     * @var user_media | @method CREATE | DELETE
-     * @param "Barear asdsad2123..."
-     */
+Route::group(["prefix" => "friends"], function () {
+
+    /** @var User @method GET  */
+    Route::get("/{id}", [FriendController::class, "getUserFriends"]);
+
+    Route::group(['middleware' =>'auth:sanctum'], function() {
+
+        /** @var User @method GET */
+        Route::get("/accept", [FriendController::class, "getUserFriendsAccept"]);
+
+        /** @var User @method POST */
+        Route::post("/add/{friend:id}", [FriendController::class, "addFriend"]);
+        Route::post("/accept/{friend:id}", [PostController::class, "acceptFriend"]);
+        
+        /** @var User @method DELETE */
+        Route::delete("/remove/{friend:id}", [PostController::class, "removeFriend"]);
+    });
+});
+
+/**
+ * @api posts
+ */
+
+Route::group(["prefix" => "posts"], function() {
 
     Route::group(['middleware' =>'auth:sanctum'], function() {
         
