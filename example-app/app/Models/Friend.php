@@ -8,8 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Friend extends Model
 {
     use HasFactory;
+    
+    public const FRIEND_NOT_ACCEPT = false;
+    public const FRIEND_ACCEPT = true;
 
-    protected $filable = [ "user_id", "friend_id", "accept" ];
+    protected $fillable = [ "user_id", "friend_id", "accept" ];
+    protected $casts = ['accept' => 'boolean'];
 
 
     public function user() {

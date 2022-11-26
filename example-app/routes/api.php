@@ -76,11 +76,11 @@ Route::group(["prefix" => "games"], function () {
 
 Route::group(["prefix" => "user"], function () {
 
-    Route::get("/{user:id}", [UserController::class, "getUserById"]);
     
     Route::group(['middleware' =>'auth:sanctum'], function () {
         
         /** @var user | @method GET */
+        Route::get("/{user:id}", [UserController::class, "getUserById"]);
         Route::get("/", [UserController::class, "getUser"]);
 
         /** @var user | @method POST */
@@ -101,15 +101,15 @@ Route::group(["prefix" => "friends"], function () {
 
     /** @var User @method GET  */
     Route::get("/{id}", [FriendController::class, "getUserFriends"]);
-
+    
     Route::group(['middleware' =>'auth:sanctum'], function() {
-
+        
         /** @var User @method GET */
-        Route::get("/accept", [FriendController::class, "getUserFriendsAccept"]);
-
+        Route::post("/accept", [FriendController::class, "getUserAcceptFriends"]);
+        
         /** @var User @method POST */
-        Route::post("/add/{friend:id}", [FriendController::class, "addFriend"]);
-        Route::post("/accept/{friend:id}", [PostController::class, "acceptFriend"]);
+        Route::post("/add/{id}", [FriendController::class, "addFriend"]);
+        Route::post("/accept/{id}", [FriendController::class, "acceptFriend"]);
         
         /** @var User @method DELETE */
         Route::delete("/remove/{friend:id}", [PostController::class, "removeFriend"]);

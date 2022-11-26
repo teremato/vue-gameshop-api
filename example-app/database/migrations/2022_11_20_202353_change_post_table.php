@@ -13,17 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->unsignedBigInteger("photo")->change()
-                ->rename("photo", "photo_id");
+        // Schema::create('posts', function (Blueprint $table) {
+        //     $table->unsignedBigInteger("photo")->change()
+        //         ->rename("photo", "photo_id");
 
-            $table->dropForeign(["photo"]);
+        //     $table->dropForeign(["photo"]);
 
-            $table->foreign("photo_id")
-                ->references("id")
-                ->on("media")
-                ->onDelete("cascade");
-        });
+        //     $table->foreign("photo_id")
+        //         ->references("id")
+        //         ->on("media")
+        //         ->onDelete("cascade");
+        // });
     }
 
     /**

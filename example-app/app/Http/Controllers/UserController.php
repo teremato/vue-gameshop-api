@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+
     /**
      * @api [user/avatar]
      * @var File photo
@@ -17,9 +18,6 @@ class UserController extends Controller
      */
 
     public function getUser(Request $request) {
-
-        // $user = $request->user();
-
         return new UserResource($request->user());
     }
 

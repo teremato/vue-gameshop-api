@@ -55,4 +55,9 @@ class User extends Authenticatable
     public function friends() {
         return $this->hasMany(Friend::class, "friend_id");
     }
+
+    public function hasFriend($id) {
+        return $this->friends()->where("user_id", $id)
+            ->count() ? true : false;
+    }
 }
