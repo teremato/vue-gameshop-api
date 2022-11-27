@@ -4,8 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
@@ -127,5 +129,7 @@ Route::group(["prefix" => "posts"], function() {
         /** @var post | @method POST | GET */
         Route::get("/user", [PostController::class, "getUserPost"]);
         Route::post("/create", [PostController::class, "store"]);
+        Route::post("/like/{id}", [LikeController::class, "likeToPost"]);
+        Route::post("favorite/{id}", [FavoriteController::class, "favoritePost"]);
     });
 });

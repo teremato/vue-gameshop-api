@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
 use App\Http\Resources\PostResource;
+use App\Models\Like;
 use App\Models\Media;
 use App\Models\Post;
 use Illuminate\Http\Request;

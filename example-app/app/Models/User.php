@@ -44,6 +44,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /** Отношения */
+
     public function media() {
         return $this->hasMany(Media::class, "user_id");
     }
@@ -56,8 +58,28 @@ class User extends Authenticatable
         return $this->hasMany(Friend::class, "friend_id");
     }
 
+    public function likes() {
+        return $this->hasMany(Like::class, "user_likes");
+    }
+
+    public function favorites() {
+        return $this->hasMany(Favorite::class, "user_favorite");
+    }
+
+    /** Проверки */
+
     public function hasFriend($id) {
         return $this->friends()->where("user_id", $id)
+            ->count() ? true : false;
+    }
+
+    public function hasLikePost($id) {
+        return $this->likes()->where("post_like", $id)
+            ->count() ? true : false;
+    }
+
+    public function hasFavoritePost($id) {
+        return $this->favorites()->where("post_favorite", $id)
             ->count() ? true : false;
     }
 }

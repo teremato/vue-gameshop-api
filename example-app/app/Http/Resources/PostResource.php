@@ -21,6 +21,17 @@ class PostResource extends JsonResource
             "user" => new UserShortResource($this->user("user_id", $this->user_id)->first()),
             "text" => $this->text,
             "photo" => new PhotoResource($this->media("photo_id", $this->photo_id)->first()),
+
+            "likes_count" => $this->likes()->count(),
+            
+            "user_like" => optional(auth()->user(), function ($user) {
+                return $user->hasLikePost($this->id);
+            }),
+
+            "user_favorite" => optional(auth()->user(), function ($user) {
+                return $user->hasFavoritePost($this->id);
+            }),
+
             "created_at" => $this->created_at
         ];
     }

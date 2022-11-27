@@ -25,4 +25,12 @@ class Post extends Model
     public function media() {
         return $this->belongsTo(Media::class, "photo_id");
     }
+
+    public function likes() {
+        return $this->hasMany(Like::class, "post_like");
+    }
+
+    public function favorites() {
+        return $this->hasMany(Favorite::class, "post_favorite");
+    }
 }
