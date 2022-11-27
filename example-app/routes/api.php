@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\FeedController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\LikeController;
@@ -81,11 +82,17 @@ Route::group(["prefix" => "user"], function () {
     
     Route::group(['middleware' =>'auth:sanctum'], function () {
         
-        /** @var user | @method GET */
-        Route::get("/{user:id}", [UserController::class, "getUserById"]);
-        Route::get("/", [UserController::class, "getUser"]);
+        /** @var user_feed */
+        Route::get("/feed", [FeedController::class, "getNewFeed"]);
+        Route::get("/feed/friends", [FeedController::class, "getFriendsFeed"]);
+        Route::get("/feed/popularity", [FeedController::class, "getPopularityFeed"]);
+        Route::get("/feed/favorite", [FeedController::class, "getFavoriteFeed"]);
 
-        /** @var user | @method POST */
+        /** @var user | @method GET */
+        Route::get("/", [UserController::class, "getUser"]);
+        Route::get("/{user:id}", [UserController::class, "getUserById"]);
+
+        /** @var user_options | @method POST */
         Route::post("/avatar", [UserController::class, "changeUserAvatar"]);
         Route::post("/status", [UserController::class, "changeUserStatus"]);
         
