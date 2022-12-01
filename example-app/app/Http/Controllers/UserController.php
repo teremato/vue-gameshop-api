@@ -106,6 +106,10 @@ class UserController extends Controller
         ]);
     }
 
+    public function getUserSettings(Request $request) {
+        
+    }
+
     public function changeUserSettings(Request $request) {
 
     }

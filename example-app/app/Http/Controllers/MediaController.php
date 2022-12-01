@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PhotoResource;
 use App\Models\Game;
 use App\Models\Media;
 use App\Models\User;
@@ -12,6 +13,15 @@ use Illuminate\Support\Facades\Storage;
 class MediaController extends Controller
 {
 
+    
+    public function getUserMedia(Request $request, $id) {
+        
+        $user = User::where('id', $id)->first();
+        
+        return PhotoResource::collection($user
+        ->media()->get());
+    }
+    
     /**
      * @api [/media/game/{game:id}/add]
      * @param photos [files:.jpg,.png]

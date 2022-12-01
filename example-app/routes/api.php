@@ -79,24 +79,34 @@ Route::group(["prefix" => "games"], function () {
 
 Route::group(["prefix" => "user"], function () {
 
+    /** @var user_media */
+    Route::get("/{id}/media", [MediaController::class, "getUserMedia"]);
     
     Route::group(['middleware' =>'auth:sanctum'], function () {
         
+        /** 
+         * @method GET 
+         */
+
         /** @var user_feed */
         Route::get("/feed", [FeedController::class, "getNewFeed"]);
         Route::get("/feed/friends", [FeedController::class, "getFriendsFeed"]);
         Route::get("/feed/popularity", [FeedController::class, "getPopularityFeed"]);
         Route::get("/feed/favorite", [FeedController::class, "getFavoriteFeed"]);
-
-        /** @var user | @method GET */
+        
+        /** @var user */
         Route::get("/", [UserController::class, "getUser"]);
         Route::get("/{user:id}", [UserController::class, "getUserById"]);
+        
+        /** 
+         * @method POST 
+         */
 
-        /** @var user_options | @method POST */
+        /** @var user_options */
         Route::post("/avatar", [UserController::class, "changeUserAvatar"]);
         Route::post("/status", [UserController::class, "changeUserStatus"]);
         
-        /** @var user_media | @method POST | DELETE */
+        /** @var user_media */
         Route::post("/media/create/{user:id}", [MediaController::class, "addUserMedia"]);
         Route::delete("/media/delete/{media:id}", [MediaController::class, "deleteUserMedia"]);
     });
