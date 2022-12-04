@@ -22,7 +22,10 @@ class User extends Authenticatable
         'email',
         'password',
         'status',
-        'avatar'
+        'avatar',
+        "nickname",
+        "country",
+        "favorite_game"
     ];
 
     /**

@@ -87,7 +87,8 @@ Route::group(["prefix" => "user"], function () {
         /** 
          * @method GET 
          */
-
+        
+        Route::get("/options", [UserController::class, "getUserSettings"]);
         /** @var user_feed */
         Route::get("/feed", [FeedController::class, "getNewFeed"]);
         Route::get("/feed/friends", [FeedController::class, "getFriendsFeed"]);
@@ -97,7 +98,6 @@ Route::group(["prefix" => "user"], function () {
         /** @var user */
         Route::get("/", [UserController::class, "getUser"]);
         Route::get("/{user:id}", [UserController::class, "getUserById"]);
-        
         /** 
          * @method POST 
          */
@@ -105,6 +105,7 @@ Route::group(["prefix" => "user"], function () {
         /** @var user_options */
         Route::post("/avatar", [UserController::class, "changeUserAvatar"]);
         Route::post("/status", [UserController::class, "changeUserStatus"]);
+        Route::post("/options", [UserController::class, "changeUserSettings"]);
         
         /** @var user_media */
         Route::post("/media/create/{user:id}", [MediaController::class, "addUserMedia"]);

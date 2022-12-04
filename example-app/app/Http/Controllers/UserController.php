@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserOptionResource;
 use App\Http\Resources\UserResource;
 use App\Models\Media;
 use App\Models\User;
@@ -106,12 +107,28 @@ class UserController extends Controller
         ]);
     }
 
+
     public function getUserSettings(Request $request) {
-        
+
+        $user = $request->user();
+        return new UserOptionResource($user);
     }
 
     public function changeUserSettings(Request $request) {
 
+        $user = $request->user();
+        
+        $user->update([
+            "name" => $request->name,
+            "username" => $request->nickname,
+            "country" => $request->country,
+            "favorite_game" => $request->favorite_game
+        ]);
+        $user->save();
+
+        return response([
+            "message" => "Настройки обновлены!"
+        ]);
     }
 
 }
