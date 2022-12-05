@@ -57,7 +57,7 @@ class PostController extends Controller
         $post->save();
 
         return response([
-            "msg" => "Post created!",
+            "message" => "Пост создан!",
             "post" => new PostResource($post)
         ]);
     }
@@ -66,7 +66,28 @@ class PostController extends Controller
 
     }
 
-    public function delete() {
+    public function delete(Request $request, $id) {
 
+        $user = $request->user();
+        $post = $user->posts()
+            ->where("id", $id)->first();
+
+        if(($post->photo_id) ? true : false) {
+
+            $photo = $post->media()->first();
+
+            Storage::disk("public")
+                ->delete($photo->file_path);
+            
+            $photo->delete();
+        }
+        
+        $post->likes()->delete();
+        $post->favorites()->delete();
+        $post->delete();
+
+        return response([
+            "message" => "Пост удален!",
+        ], 201);
     }
 }

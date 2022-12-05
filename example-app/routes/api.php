@@ -149,5 +149,6 @@ Route::group(["prefix" => "posts"], function() {
         Route::post("/create", [PostController::class, "store"]);
         Route::post("/like/{id}", [LikeController::class, "likeToPost"]);
         Route::post("favorite/{id}", [FavoriteController::class, "favoritePost"]);
+        Route::delete("delete/{id}", [PostController::class, "delete"]);
     });
 });

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 
 class Media extends Model
@@ -11,12 +12,9 @@ class Media extends Model
     use HasFactory;
 
     protected $fillable = [
-        "game_id",
-        "user_id",
-        "publisher_id",
-        "media_type",
-        "file_path",
-        "url"
+        "game_id", "user_id",
+        "publisher_id", "media_type",
+        "file_path", "url"
     ];
 
     public const TYPE_USER_AVATAR = "user_avatar";
