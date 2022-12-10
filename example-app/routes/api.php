@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\FriendController;
@@ -150,5 +151,16 @@ Route::group(["prefix" => "posts"], function() {
         Route::post("/like/{id}", [LikeController::class, "likeToPost"]);
         Route::post("favorite/{id}", [FavoriteController::class, "favoritePost"]);
         Route::delete("delete/{id}", [PostController::class, "delete"]);
+    });
+});
+
+Route::group(["prefix" => "cart"], function() {
+    Route::group(["middleware" => "auth:sanctum"], function() {
+
+        /** @var Cart | POST | GET */
+        Route::get('/', [CartController::class, "getUserCart"]);
+        Route::post('/add/{game:id}', [CartController::class, "addToCart"]);
+        Route::delete('/remove/{cart:id}', [CartController::class, "removeToCart"]);
+        Route::delete('/count/{cart:id}', [CartController::class, "decrementCount"]);
     });
 });
