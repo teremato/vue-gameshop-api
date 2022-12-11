@@ -58,18 +58,23 @@ Route::group(["prefix" => "games"], function () {
     /** @var game | @method GET */
     Route::get("/", [GameController::class, 'games']);
     Route::get("/{game:slug}", [GameController::class, 'gameItem']);
-
+    
     /** @param "Barear asdsad2123..." */
     Route::group(['middleware' =>'auth:sanctum'], function () {
-
+        
+        Route::get("/{game:slug}", [GameController::class, 'gameItem']);
         /** @var game | @method CREATE | UPDATE | DELETE */
+        Route::post("/like/{id}", [LikeController::class, "LikeToGame"]);
+        Route::post("/favorite/{id}", [FavoriteController::class, "favoriteGame"]);
+        
         Route::post("/create", [GameController::class, "store"]);
         Route::post("/update/{game:id}", [GameController::class, "update"]);
         Route::delete("/delete/{game:id}", [GameController::class, "destroy"]);
     
         /** @var game_media | @method CREATE | UPDATE | DELETE */
         Route::post("/media/create/{game:id}", [MediaController::class, "addGameMedia"]);
-        Route::delete("media/delete/{media:id}", [MediaController::class, "deleteGameMedia"]);
+        Route::delete("/media/delete/{media:id}", [MediaController::class, "deleteGameMedia"]);
+        
     });
 
 });

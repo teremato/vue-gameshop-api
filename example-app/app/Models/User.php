@@ -62,11 +62,11 @@ class User extends Authenticatable
     }
 
     public function likes() {
-        return $this->hasMany(Like::class, "user_likes");
+        return $this->hasMany(Like::class, "user_id");
     }
 
     public function favorites() {
-        return $this->hasMany(Favorite::class, "user_favorite");
+        return $this->hasMany(Favorite::class, "user_id");
     }
 
     public function cart() {
@@ -81,12 +81,26 @@ class User extends Authenticatable
     }
 
     public function hasLikePost($id) {
-        return $this->likes()->where("post_like", $id)
+        return $this->likes()->where("entity_id", $id)
+            ->where("entity_type", Like::TYPE_POST)
+            ->count() ? true : false;
+    }
+
+    public function hasLikeGame($id) {
+        return $this->likes()->where("entity_id", $id)
+            ->where("entity_type", Like::TYPE_GAME)
             ->count() ? true : false;
     }
 
     public function hasFavoritePost($id) {
-        return $this->favorites()->where("post_favorite", $id)
+        return $this->favorites()->where("entity_id", $id)
+            ->where("entity_type", Favorite::TYPE_POST)
+            ->count() ? true : false;
+    }
+
+    public function hasFavoriteGame($id) {
+        return $this->favorites()->where("entity_id", $id)
+            ->where("entity_type", Favorite::TYPE_GAME)
             ->count() ? true : false;
     }
 }

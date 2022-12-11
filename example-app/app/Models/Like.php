@@ -9,8 +9,12 @@ class Like extends Model
 {
     use HasFactory;
 
+    public const TYPE_POST = "post";
+    public const TYPE_GAME = "game";
+
     protected $fillable = [
-        "user_likes",
-        "post_like"
+        "user_id",
+        "entity_id",
+        "entity_type"
     ];
 }

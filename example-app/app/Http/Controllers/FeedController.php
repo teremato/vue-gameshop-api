@@ -66,7 +66,7 @@ class FeedController extends Controller
         $user = $request->user();
         $favorites = $user->favorites()
             ->orderBy("created_at", "desc")
-            ->pluck("post_favorite")
+            ->pluck("entity_id")
             ->toArray();
 
         $posts = Post::whereIn("id", $favorites)

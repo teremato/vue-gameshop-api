@@ -9,8 +9,12 @@ class Favorite extends Model
 {
     use HasFactory;
 
+    public const TYPE_POST = "post";
+    public const TYPE_GAME = "game";
+
     protected $fillable = [
-        "user_favorite",
-        "post_favorite"
+        "user_id",
+        "entity_id",
+        "entity_type"
     ];
 }

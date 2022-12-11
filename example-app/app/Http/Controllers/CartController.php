@@ -46,8 +46,10 @@ class CartController extends Controller
         ], 201);
     }
 
-    public function removeToCart(Request $request, Cart $cart_item) {
+    public function removeToCart(Request $request, Cart $cart) {
 
+        $cart_item = Cart::where('id', $cart->id)
+            ->first();
         $cart_item->delete();
 
         return response([
@@ -63,5 +65,19 @@ class CartController extends Controller
         return response([
             "message" => "Игра удалена из корзины"
         ], 201);
+    }
+
+    public function doOrder(Request $request) {
+
+        $user = $request->user();
+        $cart_items = $user->cart()->get();
+
+        foreach($cart_items as $item) {
+            $item->delete();
+        }
+
+        return response([
+            "message" => "Спасибо за покупку!"
+        ]);
     }
 }

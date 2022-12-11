@@ -30,6 +30,13 @@ class GameResource extends JsonResource
             "slug" => $this->slug,
             "created_at" => $this->created_at,
 
+            "user_like" => optional(auth()->user(), function($user) {
+                return $user->hasLikeGame($this->id);
+            }),
+            "user_favorite" => optional(auth()->user(),  function($user) {
+                return $user->hasFavoriteGame($this->id);
+            }),
+
             "photos" => PhotoResource::collection($this->media()
                 ->where("media_type", Media::TYPE_GAME_MEDIA)
                 ->take(6)->get()),

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Favorite;
 use App\Models\Like;
 use Illuminate\Http\Request;
 
@@ -13,23 +14,43 @@ class LikeController extends Controller
 
         if($user->hasLikePost($id)) {
 
-            Like::where("post_like", $id)
+            Like::where("entity_id", $id)
+                ->where("entity_type", Like::TYPE_POST)
                 ->delete();
 
-            return response([
-                "message" => "Лайк удален!"
-            ]);
+            return response([ "message" => "Лайк удален!" ]);
         }
 
         $like = Like::create([
-                "post_like" => $id,
-                "user_likes" => $user->id,
-                "type" => "post"
+                "entity_id" => $id,
+                "user_id" => $user->id,
+                "entity_type" => Favorite::TYPE_POST
             ]);
         $like->save();
 
-        return response([
-            "message" => "Лайк поставлен!"
+        return response([ "message" => "Лайк поставлен!" ]);
+    }
+
+    public function LikeToGame(Request $request, $id) {
+
+        $user = $request->user();
+
+        if($user->hasLikeGame($id)) {
+
+            Like::where("entity_id", $id)
+            ->where("entity_type", Like::TYPE_GAME)
+            ->delete();
+
+            return response([ "message" => "Лайк удален!" ]);
+        }
+
+        $like = Like::create([
+            "entity_id" => $id,
+            "user_id" => $user->id,
+            "entity_type" => Favorite::TYPE_GAME
         ]);
+        $like->save();
+
+        return response([ "message" => "Лайк поставлен!" ]);
     }
 }

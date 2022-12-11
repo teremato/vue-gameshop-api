@@ -27,10 +27,10 @@ class Post extends Model
     }
 
     public function likes() {
-        return $this->hasMany(Like::class, "post_like");
+        return $this->hasMany(Like::class, "entity_id");
     }
 
     public function favorites() {
-        return $this->hasMany(Favorite::class, "post_favorite");
+        return $this->hasMany(Favorite::class, "entity_id");
     }
 }
